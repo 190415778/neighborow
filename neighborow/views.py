@@ -802,7 +802,9 @@ def send_reply(request):
         title = request.POST.get('replyTitle')
         body = request.POST.get('replyText')
         message_code = request.POST.get('replyMessageCode')
-
+        if not message_code:
+            message_code = generate_unique_message_code()
+        print("message_code", message_code) 
         # Swap sender and receiver
         #if widget_origin == "itemlist":
         sender_id = original_receiver_id
@@ -900,17 +902,17 @@ def widget_send_message(request):
         all_recipients = request.POST.get('allNeighbours', 'off')
         if selected_recipients == '' and all_recipients == 'off':
             messages.error(request, "Please select a recipient!", extra_tags="popup")
-            return render(request, 'neighborow/popup_modal.html')
+            html = render_to_string('neighborow/popup_modal.html', request=request)
+            return JsonResponse({'html': html})
         
         subject = request.POST.get('subject')
         message_body = request.POST.get('messageBody')
         
-        # get logged in user
+        # Get logged in user and corresponding member
         user_instance = User.objects.get(username=request.user)
         member = Member.objects.get(user_id=user_instance)
         
         if all_recipients == 'on':
-            # filter all members in same apartment block
             recipient_list = Member.objects.filter(building_id=member.building_id)
         else:
             recipient_ids = [int(rid) for rid in selected_recipients.split(',') if rid.strip()]
@@ -920,7 +922,7 @@ def widget_send_message(request):
             with transaction.atomic():
                 for recipient in recipient_list:
                     message_code = generate_unique_message_code()
-                    # create messge for sender (Outbox)
+                    # Message for sender
                     Messages.objects.create(
                         sender_member_id=member,
                         receiver_member_id=recipient,
@@ -936,7 +938,7 @@ def widget_send_message(request):
                         message_type=MessageType.FREE_MESSAGE.value,
                         created_by=user_instance
                     )
-                    # create message for receiver (Inbox)
+                    # Message for receiver
                     Messages.objects.create(
                         sender_member_id=member,
                         receiver_member_id=recipient,
@@ -955,12 +957,14 @@ def widget_send_message(request):
         except Exception as e:
             logger.exception("Error sending message: %s", e)
             messages.error(request, "Error: Message cannot be sent! Please try again later.", extra_tags="popup")
-            return render(request, 'neighborow/popup_modal.html')
+            html = render_to_string('neighborow/popup_modal.html', request=request)
+            return JsonResponse({'html': html})
         
         messages.success(request, "Message sent successfully!", extra_tags="popup")
-        return render(request, 'neighborow/popup_modal.html')
+        html = render_to_string('neighborow/popup_modal.html', request=request)
+        return JsonResponse({'html': html})
     else:
-        return render(request, 'neighborow/widgets/send_message.html')    
+        return render(request, 'neighborow/widgets/send_message.html')
     
 # widgte items for loan
 @login_required
