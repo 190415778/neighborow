@@ -289,3 +289,6 @@ h2.text-center.mb-2 {
     background-size: 32px 32px;
 }
 
+tr.message-row.selected {
+    background-color: #9c9696; /* oder eine andere Farbe, die passt */
+  }
