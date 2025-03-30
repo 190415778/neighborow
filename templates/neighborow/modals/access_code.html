@@ -1,0 +1,101 @@
+<!-- Modal Form for Access Codes -->
+<div class="modal fade" id="modalAccessCode" tabindex="-1" aria-labelledby="modalAccessCodeLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content position-relative">
+      {% load static %}
+      <img src="{% static 'img/logo.jpg' %}" alt="Logo" class="modal-logo">
+      <div class="modal-header">
+         <h5 class="modal-title" id="modalAccessCodeLabel">Access Codes</h5>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <form method="post" action="{% url 'access_code' %}">
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="modalAccessCode">
+              
+              <!-- Dropdown: Only existing Buildings selectable -->
+              <div class="mb-3">
+                <label for="buildingSelectAccessCode" class="form-label">Select Building</label>
+                <select id="buildingSelectAccessCode" name="building_id" class="form-control">
+                  {% for building in buildings %}
+                    <option value="{{ building.id }}" {% if forloop.first %}selected{% endif %}>
+                      {{ building.id }} - {{ building.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+              
+              <!-- Table with two tbody sections: one for existing codes and one for empty rows -->
+              <div style="overflow-y: auto; height: 200px; border: 1px solid #ccc;">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Flat Number</th>
+                      <th>Code</th>
+                    </tr>
+                  </thead>
+                  <tbody id="existingAccessCodeTableBody">
+                    {% if access_codes %}
+                      {% for ac in access_codes %}
+                        <tr>
+                          <td>
+                            {{ ac.id }}
+                            <input type="hidden" name="access_code_id_{{ forloop.counter }}" value="{{ ac.id }}">
+                          </td>
+                          <td>
+                            <input type="text" name="flat_no_{{ forloop.counter }}" value="{{ ac.flat_no }}" class="form-control">
+                          </td>
+                          <td>
+                            <!-- Input group for Code with a "New Code" button -->
+                            <div class="input-group">
+                              <input type="text" name="code_{{ forloop.counter }}" value="{{ ac.code }}" class="form-control" maxlength="16">
+                              <button type="button" class="btn btn-info new-code-btn">New Code</button>
+                            </div>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    {% else %}
+                      <tr>
+                        <td colspan="3">No Access Codes found.</td>
+                      </tr>
+                    {% endif %}
+                  </tbody>
+                  <tbody id="emptyAccessCodeTableBody">
+                    {% for i in "1234567890"|make_list %}
+                      <tr>
+                        <td></td>
+                        <td>
+                          <input type="text" name="new_flat_no_{{ forloop.counter }}" value="" class="form-control">
+                        </td>
+                        <td>
+                          <!-- Input group for new Code with a "New Code" button -->
+                          <div class="input-group">
+                            <input type="text" name="new_code_{{ forloop.counter }}" value="" class="form-control" maxlength="16">
+                            <button type="button" class="btn btn-info new-code-btn">New Code</button>
+                          </div>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- Row with Number of Codes input and Generate Access Codes button on the left, Save/Cancel on the right -->
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <!-- Left side: Optional number input and Generate button -->
+                <div class="d-flex align-items-center">
+                  <input type="number" name="code_count" class="form-control me-2" style="width: 100px;" value="0" min="0" max="9999" placeholder="Number of codes">
+                  <button type="button" class="btn btn-info" id="generateAccessCodes">Generate Access Codes</button>
+                </div>
+                <!-- Right side: Save and Cancel buttons -->
+                <div>
+                  <button type="submit" class="btn btn-primary me-2">Save</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+              </div>
+         </form>
+      </div>
+    </div>
+  </div>
+</div>

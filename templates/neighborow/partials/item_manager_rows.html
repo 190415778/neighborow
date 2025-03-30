@@ -1,0 +1,27 @@
+{% for item in items %}
+<tr data-item-id="{{ item.id }}" data-full-description="{{ item.description|escape }}">
+    <td>
+        {% load static %}
+      {% if item.images.all|length %}
+        {% with first_image=item.images.all.0 %}
+          <img src="{{ first_image.image.url }}" alt="{{ first_image.caption }}" class="item-image" style="width:64px; height:64px;">
+        {% endwith %}
+      {% else %}
+        <img src="{% static 'img/placeholder.png' %}" alt="No Image" class="item-image" style="width:64px; height:64px;">
+      {% endif %}
+    </td>
+    <td>{{ item.label }}</td>
+    <td>{{ item.description|truncatechars:100 }}</td>
+    <td>
+      {% if item.available_from %}
+        {{ item.available_from|date:"Y-m-d H:i" }}
+      {% endif %}
+    </td>
+    <td>{{ item.available }}</td>
+    <td>{{ item.currently_borrowed }}</td>
+    <td>
+      <button type="button" class="btn btn-sm btn-primary edit-item-btn" style="width:100px;">Edit</button>
+      <button type="button" class="btn btn-sm btn-danger delete-item-btn" style="width:100px;">Delete</button>
+    </td>
+</tr>
+{% endfor %}

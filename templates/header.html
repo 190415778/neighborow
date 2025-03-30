@@ -1,0 +1,25 @@
+<head>
+    <!-- Meta-Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Neigborow Application - CM3070 Final Project">
+    <meta name="keywords" content="Sharing,Borrowing,Lending,Saving">
+    <meta name="author" content="Student 190415778">  
+
+    <title>Neigborow Home</title>
+    {% load static %}
+    <!-- Load favicon -->
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <!-- Bootstrap5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Interact.js für Drag & Resize -->
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <!-- Styling with css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+   <!-- Bootstrap 5 JavaScript -->
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   
+</head>
+<body hx-headers='{"X-CSRFToken": "{{csrf_token}}"}'>

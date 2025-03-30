@@ -1,0 +1,33 @@
+<!-- select_recipients.html -->
+<div class="modal fade" id="modalSelectRecipients" tabindex="-1" aria-labelledby="SelectRecipientsLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content position-relative">
+      {% load static %}
+      <img src="{% static 'img/logo.jpg' %}" alt="Logo" class="modal-logo">
+      <div class="modal-header">
+        <h5 class="modal-title" id="SelectRecipientsLabel">Filter Recipients</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Filter-Textfield -->
+        <div class="mb-3">
+          <input type="text" id="filterInput" name="filter" class="form-control" placeholder="Filter" style="font-size: 12px">
+        </div>
+        <!-- Recipient selection list -->
+        <div class="mb-3">
+          <label for="recipientSelect" class="form-label" style="font-size: 12px">Select Recipients</label>
+          <select id="recipientSelect" name="recipientSelect" class="form-select" multiple style="font-size: 12px">
+            {% for member in member_list %}
+              <option value="{{ member.id }}">{{ member.flat_no }} - {{ member.nickname }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="modalSelectRecipientsOK">OK</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+

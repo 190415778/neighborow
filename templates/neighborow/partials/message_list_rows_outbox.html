@@ -1,0 +1,15 @@
+{% for msg in messages %}
+<tr data-message-id="{{ msg.id }}"
+    data-body="{{ msg.body|escapejs }}"
+    data-sender-nickname="{{ msg.sender_member_id.nickname }}"
+    data-sender-flat="{{ msg.sender_member_id.flat_no }}"
+    data-title="{{ msg.title }}"
+    data-sender-id="{{ msg.sender_member_id.id }}"
+    data-receiver-id="{{ msg.receiver_member_id.id }}"
+    data-message-code="{{ msg.message_code }}">
+  <td>{{ msg.sender_member_id.nickname }}</td>
+  <td>{{ msg.sender_member_id.flat_no }}</td>
+  <td>{{ msg.title }}</td>
+  <td>{{ msg.created }}</td>
+</tr>
+{% endfor %}

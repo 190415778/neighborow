@@ -1,0 +1,83 @@
+<!-- Modal Form for Application Settings -->
+<div class="modal fade" id="modalAppSettings" tabindex="-1" aria-labelledby="modalAppSettingsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content position-relative">
+        {% load static %}
+        <img src="{% static 'img/logo.jpg' %}" alt="Logo" class="modal-logo">
+        <div class="modal-header">
+           <h5 class="modal-title" id="modalAppSettingsLabel">Application Settings</h5>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+           <form method="post" action="{% url 'app_settings' %}">
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="modalAppSettings">
+              <!-- Dropdown for selecting a buildings -->
+              <div class="mb-3">
+                <label for="buildingSelectAppSettings" class="form-label">Select Building</label>
+                <select id="buildingSelectAppSettings" name="building_id" class="form-control">
+                  {% for building in buildings %}
+                    <option value="{{ building.id }}">{{ building.id }} - {{ building.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              
+              <!-- A table of existing key/value pairs with 5 blank rows -->
+              <div style="overflow-y: auto; height: 200px; border: 1px solid #ccc;">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Key</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody id="settingsTableBody">
+                    {% if app_settings %}
+                      {% for setting in app_settings %}
+                        <tr>
+                          <td>
+                            {{ setting.id }}
+                            <input type="hidden" name="setting_id_{{ forloop.counter }}" value="{{ setting.id }}">
+                          </td>
+                          <td>
+                            <select name="key_{{ forloop.counter }}" class="form-control">
+                              {% for key, display in application_settings_choices %}
+                                <option value="{{ key }}" {% if setting.key == key %}selected{% endif %}>{{ display }}</option>
+                              {% endfor %}
+                            </select>
+                          </td>
+                          <td>
+                            <input type="text" name="value_{{ forloop.counter }}" value="{{ setting.value }}" class="form-control">
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    {% endif %}
+                    {% for i in "12345"|make_list %}
+                    <tr>
+                      <td></td>
+                      <td>
+                        <select name="new_key_{{ forloop.counter }}" class="form-control">
+                          <option value="">-- Select Key --</option>
+                          {% for key, display in application_settings_choices %}
+                            <option value="{{ key }}">{{ display }}</option>
+                          {% endfor %}
+                        </select>
+                      </td>
+                      <td>
+                        <input type="text" name="new_value_{{ forloop.counter }}" value="" class="form-control">
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="d-flex justify-content-end mt-3">
+                <button type="submit" class="btn btn-primary me-2">Speichern</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+              </div>
+           </form>
+        </div>
+      </div>
+    </div>
+  </div>

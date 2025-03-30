@@ -1,0 +1,145 @@
+{% load static %}
+<div class="widget" id="widgetBorrowedItems" data-member-id="{{ member.id }}" data-current-page="1">
+  <!-- Close-Button -->
+  <button type="button" class="btn-close close-widget" aria-label="Close" id="closeWidgetBorrowedItems"></button>
+  <h2 class="text-center mb-2">My {{ total_count }} borrowed items</h2>
+
+  <!-- Checkbox "Show history" -->
+  <div class="mb-3">
+    <input type="checkbox" id="showHistory" name="show_history">
+    <label for="showHistory">Show history</label>
+  </div>
+
+  <!-- scrollable container for the table -->
+  <div id="borrowedItemsTableContainer" style="height: 400px; overflow-y: auto;"
+       data-has-next="{{ borrowed_items.has_next|yesno:'true,false' }}"
+       data-next-page="{% if borrowed_items.has_next %}{{ borrowed_items.next_page_number }}{% else %}2{% endif %}"
+       data-loading="false">
+    <table class="table table-striped" id="borrowedItemsTable">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Label</th>
+          <th>Lender Nickname</th>
+          <th>Lender Flat No</th>
+          <th>Borrowed On</th>
+          <th>Borrowed Until</th>
+          <th>Return Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% include "neighborow/partials/borrowed_items_rows.html" with borrowed_items=borrowed_items %}
+      </tbody>
+    </table>
+  </div>
+  <!-- Navigation Buttons for Paging -->
+  <div id="pagingNavigation" style="text-align: center; margin-top: 10px;">
+    <button type="button" id="prevPage" class="btn btn-secondary">Previous</button>
+    <button type="button" id="nextPage" class="btn btn-secondary">Next</button>
+  </div>
+  <!-- scond Close-Button -->
+  <button type="button" class="btn btn-secondary" id="closeWidgetBorrowedItems" style="float: right;">Close</button>
+</div>
+
+<!-- Condition Log Modal -->
+<div class="modal fade" id="conditionLogModal" tabindex="-1" aria-labelledby="conditionLogModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="conditionLogModalLabel">Condition Log</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs" id="conditionLogTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="before-tab" data-bs-toggle="tab" data-bs-target="#beforeLog" type="button" role="tab" aria-controls="beforeLog" aria-selected="true">Before Borrowing</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="after-tab" data-bs-toggle="tab" data-bs-target="#afterLog" type="button" role="tab" aria-controls="afterLog" aria-selected="false">After Borrowing</button>
+          </li>
+        </ul>
+        <!-- Tab Content -->
+        <div class="tab-content" id="conditionLogTabContent">
+          <!-- Before Log Tab -->
+          <div class="tab-pane fade show active" id="beforeLog" role="tabpanel" aria-labelledby="before-tab">
+            <form id="conditionLogFormBefore" enctype="multipart/form-data">
+              <input type="hidden" name="log_type" value="before">
+              <div class="mb-3">
+                <label for="beforeLabel" class="form-label">Title</label>
+                <input type="text" class="form-control" id="beforeLabel" name="label" maxlength="150">
+              </div>
+              <div class="mb-3">
+                <label for="beforeDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="beforeDescription" name="description" maxlength="2000" rows="4"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="beforeImages" class="form-label">Upload Images</label>
+                <input type="file" class="form-control" id="beforeImages" name="images" multiple>
+              </div>
+              <!-- New caption field for before log -->
+              <div class="mb-3">
+                <label for="beforeCaption" class="form-label">Image Caption</label>
+                <input type="text" class="form-control" id="beforeCaption" name="caption" maxlength="255">
+              </div>
+              <div id="beforeImagesPreview" class="mb-3"></div>
+              <!-- New meta info container for before log -->
+              <div id="conditionLogMetaBefore" class="text-center mt-2"></div>
+            </form>
+          </div>
+          <!-- After Log Tab -->
+          <div class="tab-pane fade" id="afterLog" role="tabpanel" aria-labelledby="after-tab">
+            <form id="conditionLogFormAfter" enctype="multipart/form-data">
+              <input type="hidden" name="log_type" value="after">
+              <div class="mb-3">
+                <label for="afterLabel" class="form-label">Title</label>
+                <input type="text" class="form-control" id="afterLabel" name="label" maxlength="150">
+              </div>
+              <div class="mb-3">
+                <label for="afterDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="afterDescription" name="description" maxlength="2000" rows="4"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="afterImages" class="form-label">Upload Images</label>
+                <input type="file" class="form-control" id="afterImages" name="images" multiple>
+              </div>
+              <!-- New caption field for after log -->
+              <div class="mb-3">
+                <label for="afterCaption" class="form-label">Image Caption</label>
+                <input type="text" class="form-control" id="afterCaption" name="caption" maxlength="255">
+              </div>
+              <div id="afterImagesPreview" class="mb-3"></div>
+              <!-- New meta info container for after log -->
+              <div id="conditionLogMetaAfter" class="text-center mt-2"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- Hidden field for Transaction ID -->
+        <input type="hidden" id="conditionLogTransactionId" value="">
+        <button type="button" class="btn btn-primary" id="saveConditionLog">Save</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelConditionLog">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Condition Image Modal -->
+<div class="modal fade" id="conditionImageModal" tabindex="-1" aria-labelledby="conditionImageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- The title will be updated based on the image caption -->
+        <h5 class="modal-title" id="conditionImageModalLabel" style="font-size: 14px;">Image Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="conditionModalImage" src="" alt="" style="max-width: 100%; height: auto;">
+        <!-- New meta container for the image -->
+        <div id="conditionModalMeta" class="mt-2"></div>
+      </div>
+    </div>
+  </div>
+</div>

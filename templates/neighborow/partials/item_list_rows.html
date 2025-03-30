@@ -1,0 +1,31 @@
+{% for item in items %}
+<tr data-item-id="{{ item.id }}" 
+    data-member-id="{{ item.user_member_id }}" 
+    data-label="{{ item.label }}"
+    data-sender-id="{{ item.lender_member_id }}" 
+    data-sender-nickname="{{ item.lender_member_nickname }}" 
+    data-sender-flat="{{ item.lender_member_flat_no }}">
+    <td>
+        {% load static %}
+        {% if item.image_url %}
+            <img src="/media/{{ item.image_url }}" alt="{{ item.caption }}" class="item-image" data-item-id="{{ item.id }}" style="width:64px; height:64px;">
+        {% else %}
+            <img src="{% static 'img/placeholder.png' %}" alt="No Image" class="item-image" data-item-id="{{ item.id }}" style="width:64px; height:64px;">
+        {% endif %}
+    </td>
+    <td>{{ item.label }}</td>
+    <td title="{{ item.description }}">{{ item.description|truncatechars:100 }}</td>
+    <td>
+      {{ item.lender_member_flat_no }}<br>
+      {{ item.lender_member_nickname }}
+    </td>
+    <td>{{ item.available_from|date:"Y-m-d H:i" }}</td>
+    <td>{{ item.currently_borrowed }}</td>
+    <td>
+        <div class="btn-group-vertical">
+          <button type="button" class="btn btn-success btn-sm borrow-button">Borrow</button>
+          <button type="button" class="btn btn-info btn-sm send-message-button">Send Message</button>
+        </div>
+    </td>
+</tr>
+{% endfor %}

@@ -1,0 +1,90 @@
+{% extends "../base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+  <!--  if code is not valid show message -->
+  <!--  if invitation distance is reachede show message -->
+  {% if messages %}
+  {% for message in messages %}
+    {% if "popup" in message.tags %}
+      <!-- Popup Modal -->
+      <div class="modal fade" id="popupModal" tabindex="-1" aria-labelledby="popupModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="popupModalLabel">Notification</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              {{ message|safe }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<div id="canvas">
+  <div id="widgetContainer" class="hidden"></div>
+
+</div>
+
+<div id="modalContainer"></div>
+
+
+  <!-- Modal Form for first Login using access code-->
+  <div class="modal fade" id="modalFormCode" tabindex="-1" aria-labelledby="modalFormCodeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content position-relative">
+        <!-- neighborow logo in upper right corner -->
+        {% load static %}
+        <img src="{% static 'img/logo.jpg' %}" alt="Logo" class="modal-logo">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCodeFormLabel">Enter Access Code</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form: enter access code and nickname -->
+          {% load crispy_forms_tags %}
+          <form method="post" action="{% url 'index' %}">
+            <!-- hidden field to identify form in view -->
+            <input type="hidden" name="form_type" value="modalAccessCode">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <!-- show nickname input only on first access code input-->
+            
+              {% if not is_authorized %}
+                <!-- nickname input-->
+                <div class="mb-3">
+                  <label for="textInput" class="form-label">Nickname</label>
+                  <input type="text" class="form-control" id="nicknameInput" name="nicknameInput" maxlength="32" placeholder="32 characters">
+                </div>
+              {% endif %}
+          
+            <!-- access code input-->
+            <div class="mb-3">
+              <label for="accessCodeInput" class="form-label">Access Code</label>
+              <input type="text" class="form-control" id="accessCodeInput" name="accessCodeInput" maxlength="16" placeholder="16 characters">
+            </div>
+             <!-- modal form okay and cancel buttons-->
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary me-2">Ok</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="is_authorized" data-is-authorized="{{ is_authorized }}" data-is-superuser="{{ user.is_superuser }}" data-username="{{ user.username }}"></div>
+
+  {% load static %}
+  <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+  <script src="{% static 'js/select_recipients.js' %}"></script>
+
+  
+{% endblock %}

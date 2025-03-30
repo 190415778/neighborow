@@ -1,0 +1,291 @@
+/* style of background */
+body {
+    background-color: #FFECCE; /*#f0f4f8; */
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #11344D;
+}
+
+/* widget title */
+h2.text-center.mb-2 {
+    font-size: 18px;
+}
+
+/* styling for login page */
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+/*logo on navbar */
+.login-logo {
+    width: 90%;
+    max-width: 300px; 
+    margin-bottom: 20px;
+}
+
+/* Additional spacing to the title */
+.login-container h1 {
+    margin-bottom: 20px;
+}
+
+/* Additional spacing to the title */
+.login-container form {
+    margin-bottom: 20px;
+}
+
+/* navbar-styling  #C7B090*/
+.navbar {
+    background: linear-gradient(90deg, #142736, #3AA1D7, #D6CAB0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link {
+    color: #D2C6AC;
+    transition: color 0.3s ease;
+}
+
+.navbar .nav-link:hover {
+    color: #11344D;
+}
+
+/* dropdown-menu: hover and contour */
+.dropdown-menu {
+    background: #fff;
+    border: 2px solid #142736;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.dropdown-item {
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #11344D;
+    color: #c8e6c9;
+}
+
+/* logo on page */
+.top-right-logo {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    height: 46px;
+    width: auto;
+    transition: transform 0.3s ease;
+    z-index: 100000;
+}
+
+.top-right-logo:hover {
+    transform: rotate(45deg);
+}
+
+/* logo on modal form */
+.modal {
+    font-size: 12px;
+}   
+
+.modal-dialog {
+    margin-top: 50px !important;
+}
+
+.modal-logo {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 40px;
+    width: auto;
+}
+
+/* modale form */
+.modal-content {
+    background-color: #D6C6AC;
+    border-radius: 8px;
+    border: 2px solid #142736;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+}
+
+.modal-content:hover {
+    transform: scale(1.01);
+}
+
+/* buttons: primary and secundary */
+.btn-primary {
+    background-color: #258BA1;
+    border-color: #142736;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #FCF9E8;
+    border-color: #1C0636;
+    color: #1C0636;
+}
+
+.btn-info {
+    background-color: #142736;
+    color: #FCF9E8;
+    border-color: #FCF9E8;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-info:hover {
+    background-color: #FCF9E8;
+    border-color: #1C0636;
+    color: #1C0636;
+}
+
+.btn-info:disabled {
+    background-color: #444647;  
+    color: #FCF9E8;
+    border-color: #1C0636;
+    opacity: 0.6; 
+}
+
+.btn-secondary {
+    background-color: #e57373;
+    border-color: #e57373;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #FCF9E8;
+    border-color: #1C0636;
+    color: #1C0636;
+}
+
+/* Align footer center and add some spacing */
+#footer {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #D6C6AC; 
+}
+#footer p {
+    margin: 0;
+    font-size: 10px;
+    color: #6c757d; 
+}
+
+/* Canvas als Container */
+#canvas {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-color: #FFECCE;
+}
+
+/* Widgets style */
+.hidden {
+    display: none;
+}
+
+.widget {
+    font-size: 10px;
+    background-color: #D6C6AC;
+    border-radius: 8px;
+    border: 2px solid #142736;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: relative;
+    max-width: 600px;
+    margin: 15px auto;
+    padding: 15px;
+    overflow: auto;
+    resize: both;
+}
+
+.close-widget {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+
+#messageListContainer {
+    height: 200px; 
+    overflow-y: scroll; 
+}
+
+/* hover for widget item list  */
+
+/* Buttons im Widget */
+
+.btn-group-vertical > button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2px 0; 
+    gap: 5px; 
+}
+
+#itemSearchInput {
+    font-size: 12px;
+    height: 2rem;       
+    padding: 0.25rem 0.5rem;
+}
+
+.borrow-button, .send-message-button {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px; 
+    margin-bottom: 2px; 
+}
+
+ /* hover for widget item list  */
+.borrow-button {
+    background: url("/static/img/handshake-3309_hover.png") no-repeat center center;
+    background-size: 32px 32px;
+    border: none;
+}
+
+.borrow-button:hover {
+    background: url("/static/img/handshake-3312.png") no-repeat center center;
+    background-size: 32px 32px;
+}
+
+.send-message-button {
+    background: url("/static/img/email-7593_hover.png") no-repeat center center;
+    background-size: 32px 32px;
+    border: none;
+}
+
+.send-message-button:hover {
+    background: url("/static/img/email-7596.png") no-repeat center center;
+    background-size: 32px 32px;
+}
+
+ /* item manager  */
+.small-input {
+    font-size: 12px;
+    height: 2rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+ /* hover for borrowed items  */
+ .return-button {
+    background: url("/static/img/trust-14886.png") no-repeat center center;
+    background-size: 32px 32px;
+    border: none;
+}
+
+.return-button:hover {
+    background: url("/static/img/trust-14885.png") no-repeat center center;
+    background-size: 32px 32px;
+}
+
+.condition-log-button {
+    background: url("/static/img/view-6446.png") no-repeat center center;
+    background-size: 32px 32px;
+    border: none;
+}
+
+.condition-log-button:hover {
+    background: url("/static/img/aqua-marine-eye-color-12143.png") no-repeat center center;
+    background-size: 32px 32px;
+}
+

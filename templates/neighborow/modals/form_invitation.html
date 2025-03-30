@@ -1,0 +1,37 @@
+  <!-- Modal Form for invitation process -->
+  <div class="modal fade" id="modalFormInvitation" tabindex="-1" aria-labelledby="modalFormInvitation" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content position-relative">
+        <!-- neighborow logo in upper right corner -->
+        {% load static %}
+        <img src="{% static 'img/logo.jpg' %}" alt="Logo" class="modal-logo">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalInvitationFormLabel">Invite others</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- form: enter access code and nickname -->
+          {% load crispy_forms_tags %}
+          <form method="post" action="{% url 'index' %}">
+            <!-- hidden field to identify form in view -->
+            <input type="hidden" name="form_type" value="modalInvitation">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <!-- relationship dropdown-->
+            <div class="mb-3">
+              <select name="relationship" class="form-control">
+                {% for key, label in relationship_choices %}
+                  <option value="{{ key }}">{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+             <!-- modal form okay and cancel buttons-->
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary me-2">Ok</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

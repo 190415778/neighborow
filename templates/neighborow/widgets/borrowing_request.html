@@ -1,0 +1,51 @@
+<div class="widget" id="widgetBorrowingRequest">
+    <!-- close-Button -->
+    <button type="button" class="btn-close close-widget" aria-label="Close" id="closeWidgetBorrowingRequest"></button>
+    <h2 class="text-center mb-4">Borrowing enquiry</h2>
+    <form method="post" action="{% url 'widget_borrowing_request' %}" id="borrowingForm">
+      {% csrf_token %}
+      <!-- Subject Textbox -->
+      <div class="mb-3">
+        <label for="subject" class="form-label">Subject:</label>
+        <input type="text" class="form-control" id="subject" name="subject" required maxlength="150" placeholder="Enter subject" style="font-size: 12px">
+      </div>
+      <!-- multiline textbox for message body -->
+      <div class="mb-3">
+        <label for="messageBody" class="form-label">Message body:</label>
+        <textarea class="form-control" id="messageBody" name="messageBody" required rows="5" maxlength="2000" placeholder="Enter your message" style="font-size: 12px"></textarea>
+      </div>
+      <!-- borrowing periode -->
+      <div class="row mb-3">
+        <div class="col">
+          <label for="requiredFrom" class="form-label">Required From</label>
+          <input type="datetime-local" class="form-control" id="requiredFrom" name="requiredFrom" style="font-size: 12px">
+        </div>
+        <div class="col">
+          <label for="requiredUntil" class="form-label">Required Until</label>
+          <input type="datetime-local" class="form-control" id="requiredUntil" name="requiredUntil" style="font-size: 12px">
+        </div>
+      </div>      
+      <!-- Checkbox "All neighbours" -->
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="allNeighbours" name="allNeighbours">
+        <label class="form-check-label" for="allNeighbours">
+          All neighbours
+        </label>
+      </div>
+      <!-- Save selected IDs from RecipientSelection -->
+      <input type="hidden" id="selectedRecipients" name="selectedRecipients" value="">
+      <!-- Save timezone of user -->
+      <input type="hidden" id="userTimeZone" name="userTimeZone" value="">
+      <!-- Buttons -->
+      <div class="d-flex justify-content-between">
+        <div>
+          <button type="button" class="btn btn-info" id="selectRecipients">Select recipients</button>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-primary me-2">Send</button>
+          <button type="button" class="btn btn-secondary" id="cancelBorrowingRequest">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+

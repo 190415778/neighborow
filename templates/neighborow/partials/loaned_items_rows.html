@@ -1,0 +1,36 @@
+{% for record in loaned_items %}
+<tr data-transaction-id="{{ record.transaction_id }}" 
+    data-record-id="{{ record.id }}" 
+    data-item-id="{{ record.id }}" 
+    data-label="{{ record.label }}"
+    data-borrower-nickname="{{ record.borrower_member_nickname }}"
+    data-borrower-flat="{{ record.borrower_member_flat_no }}"
+    data-borrowed-on="{{ record.borrowed_on }}"
+    data-borrowed-until="{{ record.borrowed_until }}"
+    data-return-date="{{ record.return_date }}">
+  <td>
+    {% load static %}
+    {% if record.image_url %}
+      <img src="{{ record.image_url }}" alt="{{ record.image_caption }}" class="item-image" data-item-id="{{ record.id }}" style="width:64px; height:64px; cursor:pointer;">
+    {% else %}
+      <img src="{% static 'img/placeholder.png' %}" alt="No Image" class="item-image" data-item-id="{{ record.id }}" style="width:64px; height:64px; cursor:pointer;">
+    {% endif %}
+  </td>
+  <td>{{ record.label }}</td>
+  <td>{{ record.borrower_member_nickname }}</td>
+  <td>{{ record.borrower_member_flat_no }}</td>
+  <td>{{ record.borrowed_on|date:"Y-m-d H:i" }}</td>
+  <td>{{ record.borrowed_until|date:"Y-m-d H:i" }}</td>
+  <td>{% if record.return_date %}{{ record.return_date|date:"Y-m-d H:i" }}{% else %}--{% endif %}</td>
+  <td>
+    <div class="btn-group-vertical" style="margin: 0 auto;">
+      {% if record.return_date %}
+        <button type="button" class="btn btn-success btn-sm return-button" disabled data-bs-toggle="tooltip" data-bs-container="body" title="Returned" style="width:32px; height:32px; background-color: #c6c6c6; border-color: #d3d3d3;"></button>
+      {% else %}
+        <button type="button" class="btn btn-success btn-sm return-button" data-bs-toggle="tooltip" data-bs-container="body" title="Mark as Returned" style="width:32px; height:32px;"></button>
+      {% endif %}
+      <button type="button" class="btn btn-info btn-sm condition-log-button" data-bs-toggle="tooltip" data-bs-container="body" title="Condition Log" style="width:32px; height:32px;"></button>
+    </div>
+  </td>
+</tr>
+{% endfor %}
