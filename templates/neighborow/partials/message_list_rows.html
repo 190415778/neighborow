@@ -1,6 +1,6 @@
 {% for msg in messages %}
 <!-- in  message list, for each row: -->
-<tr data-message-id="{{ msg.id }}"
+<tr class="message-row" onclick="selectMessage(this)" data-message-id="{{ msg.id }}"
     data-body="{{ msg.body|escapejs }}"
     data-sender-nickname="{{ msg.sender_member_id.nickname }}"
     data-sender-flat="{{ msg.sender_member_id.flat_no }}"
