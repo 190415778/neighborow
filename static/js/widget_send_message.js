@@ -9,12 +9,13 @@
 
 // Initialize widget send message module
 export function initWidgetSendMessage(appendWidget, bringWidgetToFront, getCookie, showPopupModal) {
-  // Load widget HTML from server
+  // load widget html
   fetch('send_message/')
     .then(response => response.text())
     .then(html => {
       var widgetElement = appendWidget(html);
-      // Attach event handler for closing the widget
+
+      // close-Button
       var closeButton = widgetElement.querySelector('#closeWidgetSendMessage');
       if (closeButton) {
         closeButton.addEventListener('click', function(e) {
@@ -22,7 +23,8 @@ export function initWidgetSendMessage(appendWidget, bringWidgetToFront, getCooki
           widgetElement.remove();
         });
       }
-      // Attach event handler for form submission
+
+      // Form-Submit
       var form = widgetElement.querySelector('#sendMessageForm');
       if (form) {
         form.addEventListener('submit', function(ev) {
@@ -35,14 +37,16 @@ export function initWidgetSendMessage(appendWidget, bringWidgetToFront, getCooki
           })
           .then(response => response.json())
           .then(data => {
-            // Show popup modal with server response
+            // show Popup 
             showPopupModal(data.html);
             form.reset();
+            widgetElement.remove();  // Widget close
           })
           .catch(error => console.error('Error sending message:', error));
         });
       }
-      // Attach event handler for cancel action
+
+      // Cancel-Button
       var cancelButton = widgetElement.querySelector('#cancelSendMessage');
       if (cancelButton) {
         cancelButton.addEventListener('click', function(e) {
@@ -50,7 +54,8 @@ export function initWidgetSendMessage(appendWidget, bringWidgetToFront, getCooki
           widgetElement.remove();
         });
       }
-      // Attach event handler for select recipients button
+
+      // Button zur choose receiver
       var selectRecipientsButton = widgetElement.querySelector('#selectRecipients');
       if (selectRecipientsButton) {
         selectRecipientsButton.addEventListener('click', function(e) {
@@ -76,9 +81,7 @@ export function initWidgetSendMessage(appendWidget, bringWidgetToFront, getCooki
     .catch(error => console.error('Error loading widgetSendMessage:', error));
 }
 
-// Initialize restored widget with re-bound event handlers
 export function initRestoredWidget(widgetElement, bringWidgetToFront, showPopupModal) {
-  // Re-bind event handlers as in initWidgetSendMessage
   var closeButton = widgetElement.querySelector('#closeWidgetSendMessage');
   if (closeButton) {
     closeButton.addEventListener('click', function(e) {
@@ -86,7 +89,7 @@ export function initRestoredWidget(widgetElement, bringWidgetToFront, showPopupM
       widgetElement.remove();
     });
   }
-  // Attach event handler for form submission in restored widget
+  
   var form = widgetElement.querySelector('#sendMessageForm');
   if (form) {
     form.addEventListener('submit', function(ev) {
@@ -99,14 +102,14 @@ export function initRestoredWidget(widgetElement, bringWidgetToFront, showPopupM
       })
       .then(response => response.json())
       .then(data => {
-        // Show popup modal with server response
         showPopupModal(data.html);
         form.reset();
+        widgetElement.remove();  
       })
       .catch(error => console.error('Error sending message:', error));
     });
   }
-  // Attach event handler for cancel action in restored widget
+  
   var cancelButton = widgetElement.querySelector('#cancelSendMessage');
   if (cancelButton) {
     cancelButton.addEventListener('click', function(e) {
@@ -114,7 +117,7 @@ export function initRestoredWidget(widgetElement, bringWidgetToFront, showPopupM
       widgetElement.remove();
     });
   }
-  // Attach event handler for select recipients button in restored widget
+  
   var selectRecipientsButton = widgetElement.querySelector('#selectRecipients');
   if (selectRecipientsButton) {
     selectRecipientsButton.addEventListener('click', function(e) {

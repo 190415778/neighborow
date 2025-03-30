@@ -37,6 +37,37 @@ function setInnerTextSafe(parent, selector, value) {
   }
 }
 
+// Globale Funktion, die beim Klick auf eine Nachrichtenzeile aufgerufen wird
+window.selectMessage = function(row) {
+  // Finde den <tbody>-Container der Zeile
+  const container = row.closest("tbody");
+  if (container) {
+    // Entferne "table-active" von allen Zeilen im Container
+    Array.from(container.getElementsByTagName("tr")).forEach((r) => r.classList.remove("table-active"));
+  }
+  // Markiere die angeklickte Zeile
+  row.classList.add("table-active");
+  
+  // Aktualisiere (falls vorhanden) das Textfeld zur Anzeige der Nachricht
+  const widgetElement = row.closest(".widget");
+  const messageBodyDisplay = widgetElement ? widgetElement.querySelector("#messageBodyDisplay") : null;
+  if (messageBodyDisplay) {
+    let cleanBody = row.dataset.body.replace(/\\u002D\s*/g, "");
+    cleanBody = cleanBody.replace(/\\u000A/g, "\n").replace(/\\u000D/g, "\r");
+    messageBodyDisplay.value = cleanBody;
+  }
+  
+  // Speichere die ausgewählten Nachrichtendaten global
+  window.selectedMessageData = {
+    senderNickname: row.dataset.senderNickname,
+    senderFlat: row.dataset.senderFlat,
+    title: row.dataset.title,
+    senderId: row.dataset.senderId,
+    receiverId: row.dataset.receiverId,
+    messageCode: row.dataset.messageCode,
+  };
+};
+
 /**
  * Initializes the Messaging Inbox widget
  */
@@ -58,8 +89,8 @@ export function initWidgetMessagingInbox(appendWidget, bringWidgetToFront, showP
         closeBtn.addEventListener("click", () => widgetElement.remove())
       }
 
-      let selectedMessageData = {}
-      const messageList = widgetElement.querySelector("#messageList")
+      // Use <tbody> as the container for message rows
+      const messageList = widgetElement.querySelector("table tbody")
       const messageBodyDisplay = widgetElement.querySelector("#messageBodyDisplay")
 
       // Bind click event on message list rows to update message display and store selected message data
@@ -74,8 +105,8 @@ export function initWidgetMessagingInbox(appendWidget, bringWidgetToFront, showP
             let cleanBody = row.dataset.body.replace(/\\u002D\s*/g, "")
             cleanBody = cleanBody.replace(/\\u000A/g, "\n").replace(/\\u000D/g, "\r")
             messageBodyDisplay.value = cleanBody
-            // Save selected message details for reply functionality
-            selectedMessageData = {
+            // Save selected message details for reply functionality (store in global variable)
+            window.selectedMessageData = {
               senderNickname: row.dataset.senderNickname,
               senderFlat: row.dataset.senderFlat,
               title: row.dataset.title,
@@ -145,7 +176,7 @@ export function initWidgetMessagingInbox(appendWidget, bringWidgetToFront, showP
       const replyButton = widgetElement.querySelector("#replyButton")
       if (replyButton) {
         replyButton.addEventListener("click", () => {
-          if (!selectedMessageData.title) {
+          if (!window.selectedMessageData) {
             alert("Please select a message first")
             return
           }
@@ -159,22 +190,22 @@ export function initWidgetMessagingInbox(appendWidget, bringWidgetToFront, showP
           console.log("Modal element found:", modalEl)
 
           // Populate modal fields with selected message data
-          setInnerTextSafe(modalEl, "#replySenderNicknameDisplay_" + modalId, selectedMessageData.senderNickname)
-          setInnerTextSafe(modalEl, "#replySenderFlatDisplay_" + modalId, selectedMessageData.senderFlat)
-          setInnerTextSafe(modalEl, "#replyTitleDisplay_" + modalId, selectedMessageData.title)
+          setInnerTextSafe(modalEl, "#replySenderNicknameDisplay_" + modalId, window.selectedMessageData.senderNickname)
+          setInnerTextSafe(modalEl, "#replySenderFlatDisplay_" + modalId, window.selectedMessageData.senderFlat)
+          setInnerTextSafe(modalEl, "#replyTitleDisplay_" + modalId, window.selectedMessageData.title)
 
           const senderNicknameInput = modalEl.querySelector("#replySenderNickname_" + modalId)
-          if (senderNicknameInput) senderNicknameInput.value = selectedMessageData.senderNickname
+          if (senderNicknameInput) senderNicknameInput.value = window.selectedMessageData.senderNickname
           const senderFlatInput = modalEl.querySelector("#replySenderFlat_" + modalId)
-          if (senderFlatInput) senderFlatInput.value = selectedMessageData.senderFlat
+          if (senderFlatInput) senderFlatInput.value = window.selectedMessageData.senderFlat
           const titleInput = modalEl.querySelector("#replyTitle_" + modalId)
-          if (titleInput) titleInput.value = selectedMessageData.title
+          if (titleInput) titleInput.value = window.selectedMessageData.title
           const senderIdInput = modalEl.querySelector("#replySenderId_" + modalId)
-          if (senderIdInput) senderIdInput.value = selectedMessageData.senderId
+          if (senderIdInput) senderIdInput.value = window.selectedMessageData.senderId
           const receiverIdInput = modalEl.querySelector("#replyReceiverId_" + modalId)
-          if (receiverIdInput) receiverIdInput.value = selectedMessageData.receiverId
+          if (receiverIdInput) receiverIdInput.value = window.selectedMessageData.receiverId
           const messageCodeInput = modalEl.querySelector("#replyMessageCode_" + modalId)
-          if (messageCodeInput) messageCodeInput.value = selectedMessageData.messageCode
+          if (messageCodeInput) messageCodeInput.value = window.selectedMessageData.messageCode
           const replyText = modalEl.querySelector("#replyText_" + modalId)
           if (replyText) replyText.value = ""
 
@@ -245,8 +276,8 @@ export function initRestoredWidget(widgetElement, bringWidgetToFront, showPopupM
     closeBtn.addEventListener("click", () => widgetElement.remove())
   }
 
-  let selectedMessageData = {}
-  const messageList = widgetElement.querySelector("#messageList")
+  // Use <tbody> as the container for message rows (changed from "#messageList")
+  const messageList = widgetElement.querySelector("table tbody")
   const messageBodyDisplay = widgetElement.querySelector("#messageBodyDisplay")
   // Bind click event on message list rows to update message display and store selected message data
   if (messageList && messageBodyDisplay) {
@@ -260,8 +291,8 @@ export function initRestoredWidget(widgetElement, bringWidgetToFront, showPopupM
         let cleanBody = row.dataset.body.replace(/\\u002D\s*/g, "")
         cleanBody = cleanBody.replace(/\\u000A/g, "\n").replace(/\\u000D/g, "\r")
         messageBodyDisplay.value = cleanBody
-        // Store message details for later use in reply functionality
-        selectedMessageData = {
+        // Store message details for later use in reply functionality (store in global variable)
+        window.selectedMessageData = {
           senderNickname: row.dataset.senderNickname,
           senderFlat: row.dataset.senderFlat,
           title: row.dataset.title,
@@ -277,7 +308,7 @@ export function initRestoredWidget(widgetElement, bringWidgetToFront, showPopupM
   const replyButton = widgetElement.querySelector("#replyButton")
   if (replyButton) {
     replyButton.addEventListener("click", () => {
-      if (!selectedMessageData.title) {
+      if (!window.selectedMessageData) {
         alert("Please select a message first")
         return
       }
@@ -289,22 +320,22 @@ export function initRestoredWidget(widgetElement, bringWidgetToFront, showPopupM
       }
 
       // Populate modal fields with the data from the selected message
-      setInnerTextSafe(modalEl, "#replySenderNicknameDisplay_" + modalId, selectedMessageData.senderNickname)
-      setInnerTextSafe(modalEl, "#replySenderFlatDisplay_" + modalId, selectedMessageData.senderFlat)
-      setInnerTextSafe(modalEl, "#replyTitleDisplay_" + modalId, selectedMessageData.title)
+      setInnerTextSafe(modalEl, "#replySenderNicknameDisplay_" + modalId, window.selectedMessageData.senderNickname)
+      setInnerTextSafe(modalEl, "#replySenderFlatDisplay_" + modalId, window.selectedMessageData.senderFlat)
+      setInnerTextSafe(modalEl, "#replyTitleDisplay_" + modalId, window.selectedMessageData.title)
 
       const senderNicknameInput = modalEl.querySelector("#replySenderNickname_" + modalId)
-      if (senderNicknameInput) senderNicknameInput.value = selectedMessageData.senderNickname
+      if (senderNicknameInput) senderNicknameInput.value = window.selectedMessageData.senderNickname
       const senderFlatInput = modalEl.querySelector("#replySenderFlat_" + modalId)
-      if (senderFlatInput) senderFlatInput.value = selectedMessageData.senderFlat
+      if (senderFlatInput) senderFlatInput.value = window.selectedMessageData.senderFlat
       const titleInput = modalEl.querySelector("#replyTitle_" + modalId)
-      if (titleInput) titleInput.value = selectedMessageData.title
+      if (titleInput) titleInput.value = window.selectedMessageData.title
       const senderIdInput = modalEl.querySelector("#replySenderId_" + modalId)
-      if (senderIdInput) senderIdInput.value = selectedMessageData.senderId
+      if (senderIdInput) senderIdInput.value = window.selectedMessageData.senderId
       const receiverIdInput = modalEl.querySelector("#replyReceiverId_" + modalId)
-      if (receiverIdInput) receiverIdInput.value = selectedMessageData.receiverId
+      if (receiverIdInput) receiverIdInput.value = window.selectedMessageData.receiverId
       const messageCodeInput = modalEl.querySelector("#replyMessageCode_" + modalId)
-      if (messageCodeInput) messageCodeInput.value = selectedMessageData.messageCode
+      if (messageCodeInput) messageCodeInput.value = window.selectedMessageData.messageCode
       const replyText = modalEl.querySelector("#replyText_" + modalId)
       if (replyText) replyText.value = ""
 
